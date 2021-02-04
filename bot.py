@@ -43,8 +43,7 @@ def calculateTime():
 def getInterval():
     # Set period to tweet (At random time between 5-10 days)
     rand = randrange(5, 10)
-    #interval = 60 * 60 * 24 * rand
-    interval = 60 * 2  # first deploy
+    interval = 60 * 60 * 24 * rand
     # interval = 1 * rand  # for testing
     return interval
 
