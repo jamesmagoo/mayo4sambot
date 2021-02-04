@@ -61,7 +61,6 @@ PySocks==1.7.1
 python-dateutil==2.8.1
 python-dotenv==0.15.0
 pytz==2020.1
-pywin32==228
 pywinpty==0.5.7
 pyzmq==19.0.2
 requests==2.24.0
@@ -78,5 +77,4 @@ traitlets==5.0.4
 tweepy==3.10.0
 urllib3==1.25.10
 virtualenv==20.0.31
-wcwidth==0.2.5
-webencodings==0.5.1
+
