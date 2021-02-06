@@ -1,3 +1,5 @@
+# A Twitter bot which calculates and tweets the time to date since Mayo won the All-Ireland.
+
 import tweepy
 import os
 import time
@@ -19,7 +21,7 @@ api = tweepy.API(auth)
 
 
 def calculateTime():
-    # Initiate date obbject of last win
+    # Initiate date object of last win
     lastWin = datetime(1951, 9, 23, 16, 45)
 
     # Initiate today's date
@@ -40,7 +42,7 @@ def calculateTime():
     return line
 
 
-def getInterval():
+def setInterval():
     # Set period to tweet (At random time between 5-10 days)
     rand = randrange(5, 10)
     interval = 60 * 60 * 24 * rand
@@ -52,10 +54,5 @@ def getInterval():
 while True:
     line = calculateTime()
     api.update_status(line)
-    period = getInterval()
+    period = setInterval()
     time.sleep(period)
-
-# Reply to tweet 'How Long?' with the time elapsed calculated previously
-# Get mentions object mentions = api.mentions_timeline()
-# Check if mentions.text contains string 'How Long?'
-# reply with time
