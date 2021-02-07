@@ -54,57 +54,55 @@ def setInterval():
     return interval
 
 
-FILE_NAME = 'last_seen_id.txt'
-
-
-def retrieveLastSeen(file_name):
-    f_read = open(file_name, 'r')
-    last_seen_id = int(f_read.read().strip())
-    f_read.close()
-    return last_seen_id
-
-
-def storeLastSeen(last_seen_id, file_name):
-    f_write = open(file_name, 'w')
-    f_write.write(str(last_seen_id))
-    f_write.close()
-    return
+# initially, the script will assume that the last tweet was a null value
+lasttweet = None
 
 
 def replyBot():
     # Print for checking Heroku logs
     print('replyBot running...')
+    # uses the global lasttweet variable, rather than the local one
+    global lasttweet
     # Reply to mentions with the following dict items only
-    q = ['How long?', 'long', 'how many', 'Sam']
-    # Get the last seen tweet id
-    last_seen_id = retrieveLastSeen(FILE_NAME)
+    stringList = ['How long?', 'long', 'how many', '10major', 'how']
     # Get mentions object
-    mentions = api.mentions_timeline(last_seen_id, tweet_mode="extended")
-    # loop through mentions
-    for mention in reversed(mentions):
-        # if no mentions abort
-        if not mention:
-            return
-        # Check if mentions.full_text contains string 'How Long?'
-        elif any(mention.full_text in s for s in q):
-            # get user name
-            user = mention.user.screen_name
-            # get the timeSince
-            answer = calculateTime()
-            # make msg
-            msg = '@' + user + '.' + answer
-            # reply
-            api.update_status(msg, mention.id)
-            # save as last_seen
-            last_seen_id = mention.id
-            storeLastSeen(last_seen_id, FILE_NAME)
-            # else save as last_seen and abort
-        else:
-            last_seen_id = mention.id
-            storeLastSeen(last_seen_id, FILE_NAME)
-            return
+    mentions = api.mentions_timeline()
+    if not mentions:
+        print('No mentions')
+        return
+    else:
+        mention = api.mentions_timeline(tweet_mode="extended")[0]
+        # Get the last seen tweet id
+        latestMention = mention.id
+        print('All mentions replied to.')
+        # check if its been replied to
+        if latestMention != lasttweet:
+            print('New mention to reply to from - @' + mention.user.screen_name)
+            # Check if mentions.full_text contains string 'How Long?'
+            # using list comprehension 
+            # checking if string contains list element 
+            res = any(w in mention.full_text for w in stringList)
+            if res:
+                print('found string required')
+                # get user name
+                user = mention.user.screen_name
+                print(user)
+                # get the timeSince
+                answer = calculateTime()
+                # make msg
+                msg = str('Hi @' + user + '. ' + answer +
+                            ' Remind a friend or keep the faith? www.sincemayowonssam.com')
+                print(msg)
+                # reply
+                api.update_status(msg, mention.id)
+                # save as mostrecent
+                lasttweet = latestMention
+            else:
+                lasttweet = latestMention
+                print('Irrelevant string')
 
-# Legacy function to preriodically send a Tweet
+
+# Legacy function to periodically send a Tweet
 # TODO: find way to do this in the while loop without tweeting every 15s
 
 
