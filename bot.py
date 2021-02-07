@@ -85,14 +85,14 @@ def replyBot():
         # if no mentions abort
         if not mention:
             return
-        # Check if mentions.text contains string 'How Long?'
-        elif any(mention.text in s for s in q):
+        # Check if mentions.full_text contains string 'How Long?'
+        elif any(mention.full_text in s for s in q):
             # get user name
             user = mention.user.screen_name
             # get the timeSince
             answer = calculateTime()
             # make msg
-            msg = '@' + user + answer
+            msg = '@' + user + '.' + answer
             # reply
             api.update_status(msg, mention.id)
             # save as last_seen
