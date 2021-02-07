@@ -21,6 +21,7 @@ api = tweepy.API(auth)
 
 # Calculate the time since Mayo last won the All-Ireland
 
+
 def calculateTime():
     # Initiate date object of last win
     lastWin = datetime(1951, 9, 23, 16, 45)
@@ -44,6 +45,7 @@ def calculateTime():
 
 # Set interval between Tweets
 
+
 def setInterval():
     # Set period to tweet (At random time between 5-10 days)
     rand = randrange(5, 10)
@@ -51,7 +53,9 @@ def setInterval():
     # interval = 1 * rand  # for testing
     return interval
 
+
 FILE_NAME = 'last_seen_id.txt'
+
 
 def retrieveLastSeen(file_name):
     f_read = open(file_name, 'r')
@@ -68,35 +72,41 @@ def storeLastSeen(last_seen_id, file_name):
 
 
 def replyBot():
+    # Print for checking Heroku logs
+    print('replyBot running...')
     # Reply to mentions with the following dict items only
-    question = ['How long?', 'long', 'how many']
+    q = ['How long?', 'long', 'how many', 'Sam']
     # Get the last seen tweet id
-    last_seen_id = retrieveLastSeen()
+    last_seen_id = retrieveLastSeen(FILE_NAME)
     # Get mentions object
     mentions = api.mentions_timeline(last_seen_id, tweet_mode="extended")
-    # Check if mentions.text contains string 'How Long?'
+    # loop through mentions
     for mention in reversed(mentions):
         # if no mentions abort
         if not mention:
             return
-        # check if the mention contains a keyword
-        else : mention.text ###################
-        # get user name
-        user = api.get_user.screen_name
-        # get the timeSince
-        answer = calculateTime()
-        # make msg
-        msg = user + answer
-        # reply 
-        api.update_status(msg, mention.id)
-        # save as last_seen
-        last_seen_id = mention.id
-        storeLastSeen(last_seen_id, FILE_NAME)
-        # else save as last_seen and abort
-        else :
+        # Check if mentions.text contains string 'How Long?'
+        elif any(mention.text in s for s in q):
+            # get user name
+            user = mention.user.screen_name
+            # get the timeSince
+            answer = calculateTime()
+            # make msg
+            msg = '@' + user + answer
+            # reply
+            api.update_status(msg, mention.id)
+            # save as last_seen
+            last_seen_id = mention.id
+            storeLastSeen(last_seen_id, FILE_NAME)
+            # else save as last_seen and abort
+        else:
             last_seen_id = mention.id
             storeLastSeen(last_seen_id, FILE_NAME)
             return
+
+# Legacy function to preriodically send a Tweet
+# TODO: find way to do this in the while loop without tweeting every 15s
+
 
 def sendTweet():
     # send tweet periodically
@@ -106,8 +116,5 @@ def sendTweet():
 
 
 while True:
-    line = calculateTime()
-    # print(line) #testing
-    api.update_status(line)
-    period = setInterval()
-    time.sleep(period)
+    replyBot()
+    time.sleep(15)
