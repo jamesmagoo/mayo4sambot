@@ -29,6 +29,10 @@ def calculateTime():
     # Initiate today's date
     today = datetime.today()
 
+    #get days differnce as check
+
+    timedelta = today - lastWin
+
     # Calculate the difference between the two dates
     diff = relativedelta(today, lastWin,)
     years = str(diff.years)
@@ -40,7 +44,8 @@ def calculateTime():
     # Compose string to tweet
     line = str('It has been ' + years + ' years, ' + months + ' months, ' + days +
                ' days, ' + hours + ' hours, and ' + minutes + ' minutes, since Mayo won Sam.')
-
+    
+    print(timedelta)
     return line
 
 # Set interval between Tweets
@@ -114,5 +119,6 @@ def sendTweet():
 
 
 while True:
-    replyBot()
+    calculateTime()
+    #replyBot()
     time.sleep(15)
