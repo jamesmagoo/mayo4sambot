@@ -45,22 +45,12 @@ def calculateTime():
     line = str('It has been ' + years + ' years, ' + months + ' months, ' + days +
                ' days, ' + hours + ' hours, and ' + minutes + ' minutes, since Mayo won Sam.')
     
-    print(timedelta)
     return line
-
-# Set interval between Tweets
-
-
-def setInterval():
-    # Set period to tweet (At random time between 5-10 days)
-    rand = randrange(5, 10)
-    interval = 60 * 60 * 24 * rand
-    # interval = 1 * rand  # for testing
-    return interval
 
 
 # initially, the script will assume that the last tweet was a null value
 lasttweet = None
+lastHash = None
 
 
 def replyBot():
@@ -106,19 +96,29 @@ def replyBot():
                 lasttweet = latestMention
                 print('Irrelevant string')
 
+def hashBot():
+    # TODO Get the hashtag #mayo4sam & reply if there is a new one 
+    hashtags = api.search(q='mayo4sam')
+    if not hashtags:
+        print('No #mayo4sam hashtags')
+        return
+    else:
+        ## set as lastHashtagSeen
+        lastHashtagSeen = hashtags[0].id
+        # TODO Fix this logic, bot currently keeps replying to same tweet with hashtag
+        ## Check that it has not been replied to
+        if lastHashtagSeen != lastHash :
+            print(lastHashtagSeen)
+            print('yurt')
+            # reset lastHashtagSeen after replying
+            lastHashtagSeen = lastHash
+        else:
+            print('the lastHasgtagSeen was replied to')
 
-# Legacy function to periodically send a Tweet
-# TODO: find way to do this in the while loop without tweeting every 15s
-
-
-def sendTweet():
-    # send tweet periodically
-    line = calculateTime()
-    # print(line) #testing
-    api.update_status(line)
-
+   
+ # TODO Maybe use a stream to get tweets & reply
 
 while True:
-    calculateTime()
     #replyBot()
+    hashBot()
     time.sleep(15)
