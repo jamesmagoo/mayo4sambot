@@ -96,7 +96,7 @@ def replyBot():
                 answer = calculateTime()
                 # make msg
                 msg = str('Hi @' + user + '. ' + answer +
-                            ' Remind a friend or keep the faith? www.sincemayowonssam.com')
+                            ' Remind a friend or keep the faith? www.sincemayowonsam.com')
                 print(msg)
                 # reply
                 api.update_status(msg, mention.id)
