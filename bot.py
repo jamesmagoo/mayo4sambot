@@ -20,8 +20,6 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 # Calculate the time since Mayo last won the All-Ireland
-
-
 def calculateTime():
     # Initiate date object of last win
     lastWin = datetime(1951, 9, 23, 16, 45)
@@ -48,21 +46,7 @@ def calculateTime():
     print(timedelta)
     return line
 
-# Set interval between Tweets
-
-
-def setInterval():
-    # Set period to tweet (At random time between 5-10 days)
-    rand = randrange(5, 10)
-    interval = 60 * 60 * 24 * rand
-    # interval = 1 * rand  # for testing
-    return interval
-
-
-# initially, the script will assume that the last tweet was a null value
-lasttweet = None
-
-
+## Bot function
 def replyBot():
     # Print for checking Heroku logs
     print('replyBot running...')
@@ -107,10 +91,6 @@ def replyBot():
                 print('Irrelevant string')
 
 
-# Legacy function to periodically send a Tweet
-# TODO: find way to do this in the while loop without tweeting every 15s
-
-
 def sendTweet():
     # send tweet periodically
     line = calculateTime()
@@ -119,6 +99,5 @@ def sendTweet():
 
 
 while True:
-    calculateTime()
-    #replyBot()
+    replyBot()
     time.sleep(15)
