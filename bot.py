@@ -20,6 +20,8 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 # Calculate the time since Mayo last won the All-Ireland
+
+
 def calculateTime():
     # Initiate date object of last win
     lastWin = datetime(1951, 9, 23, 16, 45)
@@ -27,7 +29,7 @@ def calculateTime():
     # Initiate today's date
     today = datetime.today()
 
-    #get days differnce as check
+    # get days differnce as check
 
     timedelta = today - lastWin
 
@@ -42,11 +44,16 @@ def calculateTime():
     # Compose string to tweet
     line = str('It has been ' + years + ' years, ' + months + ' months, ' + days +
                ' days, ' + hours + ' hours, and ' + minutes + ' minutes, since Mayo won Sam.')
-    
+
     print(timedelta)
     return line
 
-## Bot function
+
+# Bot function
+# initially, the script will assume that the last tweet was a null value
+lasttweet = None
+
+
 def replyBot():
     # Print for checking Heroku logs
     print('replyBot running...')
@@ -67,9 +74,10 @@ def replyBot():
         # check if its been replied to
         if latestMention != lasttweet:
             print('New mention to reply to from - @' + mention.user.screen_name)
+            # TODO Like the users tweet here
             # Check if mentions.full_text contains string 'How Long?'
-            # using list comprehension 
-            # checking if string contains list element 
+            # using list comprehension
+            # checking if string contains list element
             res = any(w in mention.full_text for w in stringList)
             if res:
                 print('found string required')
@@ -80,7 +88,7 @@ def replyBot():
                 answer = calculateTime()
                 # make msg
                 msg = str('Hi @' + user + '. ' + answer +
-                            ' Remind a friend or keep the faith? www.sincemayowonsam.com')
+                          ' Remind a friend or keep the faith? www.sincemayowonsam.com')
                 print(msg)
                 # reply
                 api.update_status(msg, mention.id)
